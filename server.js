@@ -149,20 +149,26 @@ const server = http.createServer((req, res) => {
   };
 
   fs.stat(filePath, (err, stats) => {
-    if (err || !stats.isFile()) {
-      // Fallback to index.html for React Router
-      const indexFallback = path.join(__dirname, 'dist', 'index.html');
-      fs.stat(indexFallback, (err2, stats2) => {
-        if (err2 || !stats2.isFile()) {
-          res.writeHead(404);
-          res.end('Not found');
-          return;
-        }
-        serveFile(indexFallback);
-      });
-    } else {
-      serveFile(filePath);
+    if (!err && stats.isDirectory()) {
+      filePath = path.join(filePath, 'index.html');
     }
+
+    fs.stat(filePath, (err2, stats2) => {
+      if (err2 || !stats2.isFile()) {
+        // Fallback to index.html for React Router
+        const indexFallback = path.join(__dirname, 'dist', 'index.html');
+        fs.stat(indexFallback, (err3, stats3) => {
+          if (err3 || !stats3.isFile()) {
+            res.writeHead(404);
+            res.end('Not found');
+            return;
+          }
+          serveFile(indexFallback);
+        });
+      } else {
+        serveFile(filePath);
+      }
+    });
   });
 });
 
