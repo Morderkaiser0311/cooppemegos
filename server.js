@@ -150,6 +150,11 @@ const server = http.createServer((req, res) => {
 
   fs.stat(filePath, (err, stats) => {
     if (!err && stats.isDirectory()) {
+      if (!req.url.endsWith('/')) {
+        res.writeHead(301, { 'Location': req.url + '/' });
+        res.end();
+        return;
+      }
       filePath = path.join(filePath, 'index.html');
     }
 
