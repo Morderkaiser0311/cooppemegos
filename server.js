@@ -10,6 +10,7 @@ let clients = [];
 let sessions = []; // In-memory session cache
 
 const server = http.createServer((req, res) => {
+  console.log(`[REQUEST] ${req.method} ${req.url}`);
   // CORS Headers
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
