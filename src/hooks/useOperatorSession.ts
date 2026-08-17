@@ -72,9 +72,10 @@ export function useOperatorSession() {
       setUsePhp(false)
       return
     }
-    fetch('/sessions.php', { method: 'HEAD' })
+    fetch('/sessions.php')
       .then((res) => {
-        setUsePhp(res.ok)
+        const ct = res.headers.get('content-type') || ''
+        setUsePhp(res.ok && ct.includes('application/json'))
       })
       .catch(() => {
         setUsePhp(false)

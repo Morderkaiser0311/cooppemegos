@@ -487,9 +487,12 @@ const isLocal =
 async function checkBackend() {
   if (isLocal) return;
   try {
-    const res = await fetch('/sessions.php', { method: 'HEAD' });
-    if (res.ok) {
+    const res = await fetch('/sessions.php');
+    const ct = res.headers.get('content-type') || '';
+    if (res.ok && ct.includes('application/json')) {
       usePhpBackend = true;
+    } else {
+      usePhpBackend = false;
     }
   } catch (e) {
     usePhpBackend = false;
