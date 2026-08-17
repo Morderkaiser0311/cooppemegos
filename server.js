@@ -120,8 +120,8 @@ const server = http.createServer((req, res) => {
     return;
   }
 
-  // Serve static files from 'dist' directory
-  let filePath = path.join(__dirname, 'dist', req.url === '/' ? 'index.html' : req.url);
+  const urlPath = req.url.split('?')[0];
+  let filePath = path.join(__dirname, 'dist', urlPath === '/' ? 'index.html' : urlPath);
   
   if (!filePath.startsWith(path.join(__dirname, 'dist'))) {
     res.writeHead(403);
