@@ -214,7 +214,6 @@ export function useOperatorSession() {
     const handleMessage = (data: any) => {
       if (!data || typeof data !== 'object') return
       if (data.sessionId !== sessionIdRef.current) return
-      if (Date.now() < ignoreActionsUntilRef.current) return
 
       if (data.type === 'session:action') {
         const action = data.action
